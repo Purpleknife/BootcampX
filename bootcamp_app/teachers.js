@@ -17,10 +17,12 @@ FROM teachers
 JOIN assistance_requests ON teachers.id = teacher_id
 JOIN students ON students.id = student_id
 JOIN cohorts ON cohorts.id = cohort_id
-WHERE cohorts.name ILIKE '%${cohort}%'
+WHERE cohorts.name ILIKE $1
 ORDER BY teachers.name;`;
 
-pool.query(query)
+const values = [`%${cohort}%`];
+
+pool.query(query, values)
 .then(res => {
   res.rows.forEach(row => {
     console.log(`${row.cohort}: ${row.teacher}`);
